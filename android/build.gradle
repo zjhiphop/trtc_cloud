@@ -1,0 +1,66 @@
+group 'com.tencent.trtcplugin'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.3'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {url 'https://jitpack.io'}
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+        }
+        // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
+        consumerProguardFiles 'consumer-proguard-rules.txt'
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    dependencies {
+        api 'com.tencent.liteav:custom-video-processor:1.0.1'
+        // api 'com.tencent.liteav:LiteAVSDK_Professional:10.3.0.11144'
+        // api 'com.tencent.liteav:LiteAVSDK_TRTC:9.8.0.11553'
+        implementation 'com.google.code.gson:gson:2.8.6'
+    }
+
+    packagingOptions{
+        pickFirst '**/libc++_shared.so'
+        doNotStrip "*/armeabi/libYTCommon.so"
+        doNotStrip "*/armeabi-v7a/libYTCommon.so"
+        doNotStrip "*/x86/libYTCommon.so"
+        doNotStrip "*/arm64-v8a/libYTCommon.so"
+    }
+}
+
+// repositories {
+//     flatDir {
+//         dirs '/Users/mrx/Downloads/LiteAVSDK_TRTC_Android_9.8.0.29804/SDK'
+//     }
+// }
+
+dependencies {
+    implementation fileTree(dir:"./libs",include:['*.jar','*.aar'])
+    // compile(name: 'LiteAVSDK_TRTC_9.8.0.29804', ext:'aar')
+}
